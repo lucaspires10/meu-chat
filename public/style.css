@@ -1,0 +1,170 @@
+body {
+  background-color: #969797;
+  color: #747678;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.chat-container {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  background-color: #000000;
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.controle {
+  background-color: #202c33;
+  padding: 14px 18px;
+  border-bottom: 1px solid #2a3942;
+}
+
+.topo-chat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controle h1 {
+  font-size: 1rem;
+  color: #00a884;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+#btn-limpar {
+  background-color: #ea4335;
+  color: #ffffff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#btn-limpar:hover {
+  background-color: #c5221f;
+}
+
+.controle h3 {
+  font-size: 0.8rem;
+  color: #8696a0;
+  font-weight: normal;
+}
+
+.painel {
+  height: 420px;
+  background-color: #0b141a;
+  background-size: 16px 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+}
+
+/* Estilização da Barra de Rolagem */
+.painel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.painel::-webkit-scrollbar-track {
+  background: #0b141a;
+}
+
+.painel::-webkit-scrollbar-thumb {
+  background-color: #374248;
+  border-radius: 4px;
+}
+
+.painel::-webkit-scrollbar-thumb:hover {
+  background-color: #53bdeb;
+}
+
+.painel {
+  scrollbar-width: thin;
+  scrollbar-color: #374248 #0b141a;
+}
+
+.mensagem {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px 6px;
+  border-radius: 8px;
+  max-width: 75%;
+  font-size: 0.9rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.mensagem p {
+  color: #e9edef;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.mensagem-enviada {
+  align-self: flex-end;
+  background-color: #005c4b;
+  border-top-right-radius: 0;
+}
+
+.mensagem-recebida {
+  align-self: flex-start;
+  background-color: #202c33;
+  border-top-left-radius: 0;
+}
+
+.usuario {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #53bdeb;
+  margin-bottom: 3px;
+}
+
+.hora {
+  font-size: 0.65rem;
+  color: #8696a0;
+  align-self: flex-end;
+  margin-top: 4px;
+}
+
+.area-envio {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #202c33;
+  padding: 10px 14px;
+}
+
+#campo-mensagem {
+  flex: 1;
+  background-color: #2a3942;
+  border: none;
+  outline: none;
+  color: #e9edef;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.area-envio button {
+  background-color: #00a884;
+  border: none;
+  color: #111b21;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
