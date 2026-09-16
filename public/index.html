@@ -1,26 +1,70 @@
-<html>
+<!doctype html>
+<html lang="pt-br">
   <head>
-    <title>Whatsapp chat</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Whatsapp Chat - Login</title>
     <link rel="stylesheet" href="style.css" />
     <script src="/socket.io/socket.io.js"></script>
-    <script src="script.js" defer></script>
+    <script src="login.js" defer></script>
   </head>
   <body>
-    <div class="chat-container">
+    <div class="auth-container" id="tela-login">
+      <h2>Entrar no Chat</h2>
+      <form id="form-login">
+        <input
+          type="text"
+          id="login-usuario"
+          placeholder="Nome de usuário"
+          required
+        />
+        <input type="password" id="login-senha" placeholder="Senha" required />
+        <button type="submit">Entrar</button>
+      </form>
+      <p class="auth-toggle">
+        Não tem conta?
+        <a href="cadastro.html" class="btn-link">Cadastre-se aqui</a>
+      </p>
+      <div id="login-mensagem" class="erro-msg"></div>
+    </div>
+
+    <
+    <div class="auth-container" id="tela-conversas" style="display: none">
+      <h2>Suas Conversas</h2>
+      <p style="color: #8696a0">Selecione uma conversa para acessar:</p>
+      <ul id="lista-conversas-ul" class="lista-contatos"></ul>
+    </div>
+
+    <div class="chat-container" id="tela-chat" style="display: none">
       <div class="controle">
         <div class="topo-chat">
-          <h1>✉️ MENSAGENS ✉️</h1>
+          <button
+            id="btn-voltar"
+            title="Voltar"
+            style="
+              background: none;
+              border: none;
+              color: #00a884;
+              font-size: 1.2rem;
+              cursor: pointer;
+              margin-right: 10px;
+            "
+          >
+            ⬅ Voltar
+          </button>
+          <h1>
+            ✉️ Conversa ID:
+            <span id="id-conversa-titulo" style="color: #fff"></span>
+          </h1>
           <button id="btn-limpar" title="Excluir Conversa">
             🗑️ Excluir Conversa
           </button>
         </div>
-        <h3>Converse com seu amigo aqui pelo chat</h3>
-        <div style="margin-top: 10px">
-          <label style="font-size: 14px">Você é: </label>
-          <select id="perfil-usuario" style="padding: 4px; border-radius: 4px">
-            <option value="Lucas">Lucas</option>
-            <option value="Tiago">Tiago</option>
-          </select>
+        <div style="margin-top: 10px; color: #8696a0">
+          <span
+            >Logado como:
+            <strong id="nome-usuario-logado" style="color: #00a884"></strong
+          ></span>
         </div>
       </div>
 

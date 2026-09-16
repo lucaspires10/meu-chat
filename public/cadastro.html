@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Cadastrar Usuário</title>
+    <!-- Adicionada a / antes de style.css -->
+    <link rel="stylesheet" href="/style.css" />
+    <!-- Adicionada a / antes do script do socket -->
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <div class="auth-container">
+      <h2>Criar Nova Conta</h2>
+      <form id="cadastro-form">
+        <input
+          type="text"
+          id="cad-usuario"
+          placeholder="Nome de usuário"
+          required
+        />
+        <input
+          type="password"
+          id="cad-senha"
+          placeholder="Sua senha"
+          required
+        />
+        <button type="submit">Cadastrar</button>
+      </form>
+      <p id="auth-toggle">Já tem conta? <a href="/">Voltar ao Login</a></p>
+      <div id="cadastro-mensagem" class="erro-msg"></div>
+    </div>
+
+    <script>
+      const socket = io();
+      const form = document.getElementById("cadastro-form");
+      const inputUsuario = document.getElementById("cad-usuario");
+      const inputSenha = document.getElementById("cad-senha");
+      const mensagemDiv = document.getElementById("cadastro-mensagem");
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const usuario = inputUsuario.value.trim();
+        const senha = inputSenha.value.trim();
+
+        socket.emit("cadastrar usuario", { usuario, senha });
+      });
+
+      socket.on("resposta cadastro", (res) => {
+        mensagemDiv.textContent = res.mensagem;
+        if (res.sucesso) {
+          mensagemDiv.style.color = "#81c995";
+          setTimeout(() => {
+            window.location.href = "/"; // Volta para a tela inicial/login
+          }, 1500);
+        } else {
+          mensagemDiv.style.color = "#f28b82";
+        }
+      });
+    </script>
+  </body>
+</html>
