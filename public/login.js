@@ -1,26 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
   const socket = io();
-
   const telaLogin = document.getElementById("tela-login");
   const telaConversas = document.getElementById("tela-conversas");
+  const telaUsuarios = document.getElementById("tela-usuarios");
   const telaChat = document.getElementById("tela-chat");
-
   const formLogin = document.getElementById("form-login");
   const formChat = document.getElementById("chat-form");
   const loginMensagem = document.getElementById("login-mensagem");
-
   const listaConversasUl = document.getElementById("lista-conversas-ul");
+  const listaUsuariosUl = document.getElementById("lista-usuarios-ul");
+  const btnIniciarConversa = document.getElementById("btn-iniciar-conversa");
+  const btnCancelarNovoChat = document.getElementById("btn-cancelar-novo-chat");
   const inputMensagem = document.getElementById("campo-mensagem");
   const nomeUsuarioLogado = document.getElementById("nome-usuario-logado");
   const idConversaTitulo = document.getElementById("id-conversa-titulo");
   const painel = document.getElementById("painel-mensagens");
   const btnLimpar = document.getElementById("btn-limpar");
   const btnVoltar = document.getElementById("btn-voltar");
-
   let usuarioLogado = "";
   let idConversaAtiva = null;
 
-  // LOGIN
   formLogin.addEventListener("submit", (e) => {
     e.preventDefault();
     const usuario = document.getElementById("login-usuario").value.trim();
@@ -46,36 +45,82 @@ document.addEventListener("DOMContentLoaded", () => {
       loginMensagem.textContent = res.mensagem;
     }
   });
-
   socket.on("lista conversas", (listaIds) => {
     listaConversasUl.innerHTML = "";
 
-    if (listaIds.length === 0) {
+    if (!listaIds || listaIds.length === 0) {
       listaConversasUl.innerHTML =
         "<li style='color: #8696a0;'>Você não tem conversas salvas.</li>";
-      return;
-    }
+    } else {
+      listaIds.forEach((id) => {
+        const li = document.createElement("li");
+        li.className = "item-usuario";
+        li.innerHTML = `💬 <strong>Conversa #${id}</strong> <span>Entrar </span>`;
 
-    listaIds.forEach((id) => {
-      const li = document.createElement("li");
-      li.className = "item-usuario";
-      li.innerHTML = `💬 <strong>Conversa #${id}</strong> <span>Entrar ➡</span>`;
+        li.addEventListener("click", () => {
+          abrirChat(id);
+        });
 
-      li.addEventListener("click", () => {
-        idConversaAtiva = id;
-        idConversaTitulo.textContent = `#${idConversaAtiva}`;
-
-        telaConversas.style.display = "none";
-        telaChat.style.display = "flex";
-
-        socket.emit("abrir conversa por id", idConversaAtiva);
+        listaConversasUl.appendChild(li);
       });
-
-      listaConversasUl.appendChild(li);
-    });
+    }
+  });
+  btnIniciarConversa.addEventListener("click", (e) => {
+    e.preventDefault();
+    socket.emit("listar outros usuarios", usuarioLogado);
   });
 
-  btnVoltar.addEventListener("click", () => {
+  socket.on("lista outros usuarios", (usuarios) => {
+    listaUsuariosUl.innerHTML = "";
+
+    if (!usuarios || usuarios.length === 0) {
+      listaUsuariosUl.innerHTML =
+        "<li style='color: #8696a0;'>Nenhum outro usuário cadastrado.</li>";
+    } else {
+      usuarios.forEach((u) => {
+        const li = document.createElement("li");
+        li.className = "item-usuario";
+        li.innerHTML = `👤 <strong>${u}</strong> <span>Iniciar Chat </span>`;
+
+        li.addEventListener("click", () => {
+          socket.emit("iniciar conversa", {
+            meuUsuario: usuarioLogado,
+            outroUsuario: u,
+          });
+        });
+
+        listaUsuariosUl.appendChild(li);
+      });
+    }
+
+    telaConversas.style.display = "none";
+    telaUsuarios.style.display = "flex";
+  });
+
+  btnCancelarNovoChat.addEventListener("click", (e) => {
+    e.preventDefault();
+    telaUsuarios.style.display = "none";
+    telaConversas.style.display = "flex";
+  });
+
+  socket.on("conversa iniciada", (idConversa) => {
+    telaUsuarios.style.display = "none";
+    abrirChat(idConversa);
+  });
+
+  function abrirChat(id) {
+    idConversaAtiva = id;
+    idConversaTitulo.textContent = `#${idConversaAtiva}`;
+
+    telaConversas.style.display = "none";
+    telaUsuarios.style.display = "none";
+    telaChat.style.display = "flex";
+
+    socket.emit("abrir conversa por id", idConversaAtiva);
+  }
+
+  btnVoltar.addEventListener("click", (e) => {
+    e.preventDefault();
     telaChat.style.display = "none";
     telaConversas.style.display = "flex";
     socket.emit("listar conversas", usuarioLogado);

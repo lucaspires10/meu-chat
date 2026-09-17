@@ -3,15 +3,11 @@ const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-
 const dbFile = path.resolve(__dirname, "database.db");
-
 console.log("📍 Conectando ao banco de dados em:", dbFile);
-
 const db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
     console.error("❌ ERRO AO CONECTAR NO BANCO:", err.message);
@@ -80,7 +76,6 @@ io.on("connection", (socket) => {
     );
   });
 
-  // LOGIN DO USUÁRIO
   socket.on("login usuario", (data) => {
     const { usuario, senha } = data;
 
@@ -99,14 +94,53 @@ io.on("connection", (socket) => {
     );
   });
 
-  // BUSCAR LISTA DE CONVERSAS ONDE APENAS O USUÁRIO LOGADO PARTICIPOU
+  socket.on("listar outros usuarios", (meuUsuario) => {
+    db.all(
+      `SELECT login FROM "cadastro" WHERE login != ? AND login IS NOT NULL`,
+      [meuUsuario],
+      (err, rows) => {
+        if (!err && rows) {
+          const lista = rows.map((r) => r.login);
+          socket.emit("lista outros usuarios", lista);
+        } else {
+          socket.emit("lista outros usuarios", []);
+        }
+      },
+    );
+  });
+
+  socket.on("iniciar conversa", ({ meuUsuario, outroUsuario }) => {
+    db.get(
+      `SELECT MAX("id-conversa") as maxId FROM "base-mensagens"`,
+      (err, row) => {
+        const novoIdConversa = (row && row.maxId ? Number(row.maxId) : 0) + 1;
+        const agora = new Date();
+        const dataMensagem = agora.toLocaleDateString("pt-BR");
+        const horaMensagem = agora.toLocaleTimeString("pt-BR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+        const conteudoParaBanco = `[${meuUsuario}]: Conversa iniciada com ${outroUsuario}`;
+        db.run(
+          `INSERT INTO "base-mensagens" ("id-conversa", "data-mensagem", "hora-mensagem", "escreveu-mensagem") VALUES (?, ?, ?, ?)`,
+          [novoIdConversa, dataMensagem, horaMensagem, conteudoParaBanco],
+          function (err) {
+            if (!err) {
+              socket.emit("conversa iniciada", novoIdConversa);
+            }
+          },
+        );
+      },
+    );
+  });
   socket.on("listar conversas", (meuUsuario) => {
     db.all(
       `SELECT DISTINCT "id-conversa" 
        FROM "base-mensagens" 
-       WHERE "escreveu-mensagem" LIKE ? AND "id-conversa" IS NOT NULL 
-       ORDER BY "id-conversa" ASC`,
-      [`%[${meuUsuario}]%`],
+       WHERE ("escreveu-mensagem" LIKE ? OR "escreveu-mensagem" LIKE ?) 
+         AND "id-conversa" IS NOT NULL 
+       ORDER BY "id-conversa" DESC`,
+      [`%[${meuUsuario}]%`, `%Conversa iniciada com ${meuUsuario}%`],
       (err, rows) => {
         if (!err && rows) {
           const listaIds = rows.map((r) => r["id-conversa"]);
@@ -117,8 +151,6 @@ io.on("connection", (socket) => {
       },
     );
   });
-
-  // ENTRAR EM UMA CONVERSA ESPECÍFICA PELO ID
   socket.on("abrir conversa por id", (idConversa) => {
     const roomName = `conversa_${idConversa}`;
 
@@ -146,11 +178,9 @@ io.on("connection", (socket) => {
     );
   });
 
-  // ENVIAR MENSAGEM
   socket.on("chat message", (data) => {
     const { usuario, texto, hora, idConversa } = data;
     const roomName = `conversa_${idConversa}`;
-
     const agora = new Date();
     const dataMensagem = agora.toLocaleDateString("pt-BR");
     const horaMensagem =
@@ -162,7 +192,6 @@ io.on("connection", (socket) => {
       `INSERT INTO "base-mensagens" ("id-conversa", "data-mensagem", "hora-mensagem", "escreveu-mensagem") VALUES (?, ?, ?, ?)`,
       [idConversa, dataMensagem, horaMensagem, conteudoParaBanco],
     );
-
     io.to(roomName).emit("chat message", {
       usuario: usuario,
       texto: texto,
@@ -170,7 +199,6 @@ io.on("connection", (socket) => {
     });
   });
 
-  // EXCLUIR/LIMPAR MENSAGENS DO ID SELECIONADO
   socket.on("limpar historico", (idConversa) => {
     const roomName = `conversa_${idConversa}`;
     db.run(

@@ -28,11 +28,50 @@
       <div id="login-mensagem" class="erro-msg"></div>
     </div>
 
-    <
     <div class="auth-container" id="tela-conversas" style="display: none">
       <h2>Suas Conversas</h2>
-      <p style="color: #8696a0">Selecione uma conversa para acessar:</p>
+      <p style="color: #8696a0">Selecione uma conversa ou inicie uma nova:</p>
+
       <ul id="lista-conversas-ul" class="lista-contatos"></ul>
+
+      <div id="secao-novo-chat" style="margin-top: 15px">
+        <button
+          id="btn-iniciar-conversa"
+          style="
+            width: 100%;
+            background-color: #00a884;
+            color: #111b21;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+          "
+        >
+          Iniciar conversa com novo usuário
+        </button>
+      </div>
+    </div>
+
+    <div class="auth-container" id="tela-usuarios" style="display: none">
+      <h2>Iniciar Nova Conversa</h2>
+      <p style="color: #8696a0">Selecione um usuário cadastrado:</p>
+      <ul id="lista-usuarios-ul" class="lista-contatos"></ul>
+      <button
+        id="btn-cancelar-novo-chat"
+        style="
+          margin-top: 15px;
+          background-color: #f71500;
+          color: white;
+          border: none;
+          padding: 10px;
+          border-radius: 10px;
+          cursor: pointer;
+          width: 100%;
+        "
+      >
+        Cancelar
+      </button>
     </div>
 
     <div class="chat-container" id="tela-chat" style="display: none">
@@ -50,7 +89,7 @@
               margin-right: 10px;
             "
           >
-            ⬅ Voltar
+            Voltar
           </button>
           <h1>
             ✉️ Conversa ID:
