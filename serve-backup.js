@@ -3,13 +3,10 @@ const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
 const sqlite3 = require("sqlite3").verbose();
-const bcrypt = require("bcrypt"); // 1. Importação da biblioteca de criptografia
-
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 const dbFile = path.resolve(__dirname, "database.db");
-
 console.log("📍 Conectando ao banco de dados em:", dbFile);
 const db = new sqlite3.Database(dbFile, (err) => {
   if (err) {
@@ -42,11 +39,9 @@ const db = new sqlite3.Database(dbFile, (err) => {
 
 app.use(express.static(path.join(__dirname, "public")));
 
-const SALT_ROUNDS = 10; // Número de rodadas de salt para a criptografia
-
 io.on("connection", (socket) => {
   // CADASTRAR USUÁRIO
-  socket.on("cadastrar usuario", async (data) => {
+  socket.on("cadastrar usuario", (data) => {
     const { usuario, senha } = data;
     if (!usuario || !senha) {
       return socket.emit("resposta cadastro", {
@@ -55,68 +50,45 @@ io.on("connection", (socket) => {
       });
     }
 
-    try {
-      // 2. Criptografa a senha antes de salvar no banco
-      const senhaHash = await bcrypt.hash(senha, SALT_ROUNDS);
-
-      db.run(
-        `INSERT INTO "cadastro" ("login", "senha") VALUES (?, ?)`,
-        [usuario, senhaHash], // Salva a senha criptografada
-        function (err) {
-          if (err) {
-            if (err.message.includes("UNIQUE")) {
-              socket.emit("resposta cadastro", {
-                sucesso: false,
-                mensagem: "Este nome de usuário já existe!",
-              });
-            } else {
-              socket.emit("resposta cadastro", {
-                sucesso: false,
-                mensagem: `Erro no banco: ${err.message}`,
-              });
-            }
+    db.run(
+      `INSERT INTO "cadastro" ("login", "senha") VALUES (?, ?)`,
+      [usuario, senha],
+      function (err) {
+        if (err) {
+          if (err.message.includes("UNIQUE")) {
+            socket.emit("resposta cadastro", {
+              sucesso: false,
+              mensagem: "Este nome de usuário já existe!",
+            });
           } else {
             socket.emit("resposta cadastro", {
-              sucesso: true,
-              mensagem: "Cadastrado com sucesso!",
+              sucesso: false,
+              mensagem: `Erro no banco: ${err.message}`,
             });
           }
-        },
-      );
-    } catch (error) {
-      socket.emit("resposta cadastro", {
-        sucesso: false,
-        mensagem: "Erro ao processar a segurança da senha.",
-      });
-    }
+        } else {
+          socket.emit("resposta cadastro", {
+            sucesso: true,
+            mensagem: "Cadastrado com sucesso!",
+          });
+        }
+      },
+    );
   });
 
-  // LOGIN DO USUÁRIO
   socket.on("login usuario", (data) => {
     const { usuario, senha } = data;
 
-    // 3. Busca o usuário apenas pelo login (sem filtrar por senha no SQL)
     db.get(
-      `SELECT * FROM "cadastro" WHERE "login" = ?`,
-      [usuario],
-      async (err, row) => {
+      `SELECT * FROM "cadastro" WHERE "login" = ? AND "senha" = ?`,
+      [usuario, senha],
+      (err, row) => {
         if (err || !row) {
           return socket.emit("resposta login", {
             sucesso: false,
             mensagem: "Usuário ou senha incorretos!",
           });
         }
-
-        // 4. Compara a senha digitada com a hash salva no banco
-        const senhaValida = await bcrypt.compare(senha, row.senha);
-
-        if (!senhaValida) {
-          return socket.emit("resposta login", {
-            sucesso: false,
-            mensagem: "Usuário ou senha incorretos!",
-          });
-        }
-
         socket.emit("resposta login", { sucesso: true, usuario: row.login });
       },
     );
@@ -161,7 +133,6 @@ io.on("connection", (socket) => {
       },
     );
   });
-
   socket.on("listar conversas", (meuUsuario) => {
     db.all(
       `SELECT DISTINCT "id-conversa" 
@@ -180,7 +151,6 @@ io.on("connection", (socket) => {
       },
     );
   });
-
   socket.on("abrir conversa por id", (idConversa) => {
     const roomName = `conversa_${idConversa}`;
 
