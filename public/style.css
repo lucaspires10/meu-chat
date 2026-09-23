@@ -11,21 +11,15 @@ html,
 body {
   width: 100%;
   height: 100%;
-  height: 100dvh; /* Garante ajuste perfeito no mobile (Safari/Chrome) */
+  height: 100dvh;
   background-color: #111b21;
   color: #e9edef;
   overflow: hidden;
 }
 
-body {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 /* =========================================
-         TELAS DE AUTENTICAÇÃO E LISTAS
-         ========================================= */
+   TELA DE AUTENTICAÇÃO
+   ========================================= */
 .auth-container {
   width: 100%;
   height: 100%;
@@ -38,11 +32,11 @@ body {
 
 .auth-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 400px;
   background-color: #202c33;
-  padding: 28px 20px;
+  padding: 28px 24px;
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -51,19 +45,19 @@ body {
 
 .auth-card h2 {
   color: #e9edef;
-  font-size: 1.4rem;
+  font-size: 1.5rem;
 }
 
 .subtitle {
   color: #8696a0;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
 }
 
 .auth-card form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: 6px;
+  margin-top: 8px;
 }
 
 .input-group input,
@@ -94,18 +88,11 @@ body {
   cursor: pointer;
   width: 100%;
   min-height: 48px;
+  transition: background 0.2s;
 }
 
-.btn-danger {
-  background-color: #ea4335;
-  color: #ffffff;
-  font-weight: bold;
-  border: none;
-  padding: 12px;
-  border-radius: 10px;
-  cursor: pointer;
-  width: 100%;
-  min-height: 48px;
+.btn-primary:hover {
+  background-color: #008f6f;
 }
 
 .btn-link {
@@ -125,144 +112,232 @@ body {
   min-height: 20px;
 }
 
-/* Listas */
-.lista-contatos {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 260px;
-  overflow-y: auto;
-  margin-top: 8px;
-}
-
-.item-usuario {
-  background-color: #2a3942;
-  color: #e9edef;
-  padding: 14px 16px;
-  border-radius: 10px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.item-usuario:active,
-.item-usuario:hover {
-  background-color: #00a884;
-  color: #111b21;
-}
-
-.item-usuario span {
-  font-size: 0.8rem;
-  opacity: 0.85;
-}
-
 /* =========================================
-         TELA DO CHAT (RESPONSIVA)
-         ========================================= */
-.chat-container {
+   LAYOUT PRINCIPAL E SIDEBAR
+   ========================================= */
+.main-wrapper {
+  display: none;
   width: 100%;
   height: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  background-color: #0b141a;
 }
 
-.controle {
+.sidebar {
+  width: 100%;
+  height: 100%;
+  background-color: #111b21;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #222d34;
+}
+
+.sidebar-header {
   background-color: #202c33;
-  padding: 10px 14px;
-  border-bottom: 1px solid #2a3942;
+  padding: 12px 16px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   min-height: 60px;
 }
 
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #e9edef;
+}
+
+.user-avatar {
+  background-color: #6b7c85;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon-danger {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 6px;
+}
+
+.sidebar-tabs {
+  display: flex;
+  background-color: #111b21;
+  border-bottom: 1px solid #222d34;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 12px;
+  background: none;
+  border: none;
+  color: #8696a0;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.tab-btn.active {
+  color: #00a884;
+  border-bottom-color: #00a884;
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.lista-contatos {
+  list-style: none;
+}
+
+.item-usuario {
+  padding: 14px 16px;
+  border-bottom: 1px solid #222d34;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.item-usuario:hover,
+.item-usuario.active {
+  background-color: #2a3942;
+}
+
+.item-usuario span {
+  font-size: 0.8rem;
+  color: #8696a0;
+}
+
+/* =========================================
+   ÁREA DE CHAT
+   ========================================= */
+.chat-area {
+  flex: 1;
+  height: 100%;
+  background-color: #0b141a;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-empty {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #8696a0;
+  padding: 20px;
+}
+
+.empty-content .whatsapp-icon {
+  font-size: 4rem;
+  margin-bottom: 12px;
+}
+
+.empty-content h2 {
+  color: #e9edef;
+  margin-bottom: 8px;
+}
+
+.chat-active-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.controle {
+  background-color: #202c33;
+  padding: 10px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 60px;
+  border-bottom: 1px solid #222d34;
+}
+
 .topo-chat {
   display: flex;
   align-items: center;
-  gap: 8px;
-  overflow: hidden;
+  gap: 12px;
 }
 
 .btn-icon {
   background: none;
   border: none;
-  color: #00a884;
+  color: #aebac1;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 6px;
+  padding: 4px;
 }
 
 .chat-info h1 {
-  font-size: 0.95rem;
-  color: #00a884;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 1rem;
+  color: #e9edef;
 }
 
 .status-user {
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   color: #8696a0;
-  display: block;
 }
 
 .btn-danger-sm {
   background-color: #ea4335;
   color: #ffffff;
   border: none;
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-size: 0.75rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
-  white-space: nowrap;
 }
 
 /* Painel de Mensagens */
 .painel {
   flex: 1;
-  background-color: #0b141a;
-  padding: 14px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   overflow-y: auto;
+  background-color: #0b141a;
 }
 
 .mensagem {
   display: flex;
   flex-direction: column;
-  padding: 8px 12px 6px;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
   max-width: 85%;
-  font-size: 0.92rem;
+  font-size: 0.93rem;
   word-break: break-word;
+  position: relative;
 }
 
 .mensagem p {
   color: #e9edef;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
 .mensagem-enviada {
   align-self: flex-end;
   background-color: #005c4b;
-  border-top-right-radius: 2px;
+  border-top-right-radius: 0;
 }
 
 .mensagem-recebida {
   align-self: flex-start;
   background-color: #202c33;
-  border-top-left-radius: 2px;
+  border-top-left-radius: 0;
 }
 
 .usuario {
@@ -283,14 +358,15 @@ body {
 .area-envio {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background-color: #202c33;
-  padding: 10px 12px;
-  min-height: 60px;
+  padding: 10px 16px;
+  min-height: 62px;
 }
 
 .area-envio input {
   flex: 1;
+  border-radius: 8px;
 }
 
 .area-envio button {
@@ -306,19 +382,46 @@ body {
   cursor: pointer;
 }
 
-/* REGRAS DE ADAPTAÇÃO PARA NOTEBOOK / DESKTOP */
-@media (min-width: 769px) {
-  .painel {
-    padding: 24px 30px;
+/* =========================================
+   MEDIA QUERIES (RESPONSIVIDADE)
+   ========================================= */
+
+/* Dispositivos Móveis (Celulares - telas menores que 768px) */
+@media (max-width: 767px) {
+  .main-wrapper.chat-aberto .sidebar {
+    display: none;
+  }
+  .main-wrapper.chat-aberto .chat-area {
+    display: flex;
+  }
+  .main-wrapper:not(.chat-aberto) .sidebar {
+    display: flex;
+  }
+  .main-wrapper:not(.chat-aberto) .chat-area {
+    display: none;
+  }
+  .chat-empty {
+    display: none !important;
+  }
+}
+
+/* Notebooks e Desktops (Telas de 768px ou mais) */
+@media (min-width: 768px) {
+  .main-wrapper {
+    display: flex;
+  }
+  .sidebar {
+    width: 320px;
+    min-width: 300px;
+    max-width: 400px;
+  }
+  #btn-voltar {
+    display: none; /* Não precisa de voltar no desktop */
   }
   .mensagem {
     max-width: 65%;
   }
-  .controle,
-  .area-envio {
-    padding: 12px 20px;
-  }
-  .chat-info h1 {
-    font-size: 1.1rem;
+  .painel {
+    padding: 24px 40px;
   }
 }

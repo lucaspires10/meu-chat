@@ -6,12 +6,13 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Whatsapp Chat</title>
+    <title>WhatsApp Chat Responsivo</title>
     <link rel="stylesheet" href="style.css" />
     <script src="/socket.io/socket.io.js"></script>
-    <script src="login.js" defer></script>
+    <script src="script.js" defer></script>
   </head>
   <body>
+    <!-- CONTAINER DE AUTENTICAÇÃO -->
     <div class="auth-container" id="tela-login">
       <div class="auth-card">
         <h2>Entrar no Chat</h2>
@@ -39,83 +40,108 @@
 
         <p class="auth-toggle">
           Não tem conta?
-          <a href="cadastro.html" class="btn-link">Cadastre-se aqui</a>
+          <a href="#" class="btn-link">Cadastre-se aqui</a>
         </p>
         <div id="login-mensagem" class="erro-msg"></div>
       </div>
     </div>
 
-    <!-- TELA DE LISTA DE CONVERSAS -->
-    <div class="auth-container" id="tela-conversas" style="display: none">
-      <div class="auth-card">
-        <h2>Suas Conversas</h2>
-        <p class="subtitle">Selecione uma conversa ou inicie uma nova:</p>
+    <!-- ESTRUTURA PRINCIPAL DO CHAT -->
+    <div class="main-wrapper" id="main-wrapper">
+      <!-- BARRA LATERAL (LISTAS) -->
+      <aside class="sidebar" id="sidebar">
+        <!-- CABEÇALHO DA SIDEBAR -->
+        <header class="sidebar-header">
+          <div class="user-badge">
+            <span class="user-avatar">👤</span>
+            <span id="nome-usuario-logado" class="user-name">Usuário</span>
+          </div>
+          <button id="btn-sair" class="btn-icon-danger" title="Sair">🚪</button>
+        </header>
 
-        <ul id="lista-conversas-ul" class="lista-contatos"></ul>
-
-        <div id="secao-novo-chat" style="margin-top: 10px">
-          <button id="btn-iniciar-conversa" class="btn-primary">
-            + Iniciar conversa
-          </button>
+        <!-- NAVEGAÇÃO INTERNA DA SIDEBAR -->
+        <div class="sidebar-tabs">
+          <button id="tab-conversas" class="tab-btn active">Conversas</button>
+          <button id="tab-usuarios" class="tab-btn">Novo Chat</button>
         </div>
-      </div>
-    </div>
 
-    <!-- TELA DE SELEÇÃO DE USUÁRIOS -->
-    <div class="auth-container" id="tela-usuarios" style="display: none">
-      <div class="auth-card">
-        <h2>Nova Conversa</h2>
-        <p class="subtitle">Selecione um usuário cadastrado:</p>
-
-        <ul id="lista-usuarios-ul" class="lista-contatos"></ul>
-
-        <div style="margin-top: 10px">
-          <button id="btn-cancelar-novo-chat" class="btn-danger">
-            Cancelar
-          </button>
+        <!-- LISTA DE CONVERSAS -->
+        <div id="painel-conversas" class="sidebar-content">
+          <ul id="lista-conversas-ul" class="lista-contatos"></ul>
         </div>
-      </div>
-    </div>
 
-    <!-- TELA DO CHAT -->
-    <div class="chat-container" id="tela-chat" style="display: none">
-      <header class="controle">
-        <div class="topo-chat">
-          <button id="btn-voltar" class="btn-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-              <path
-                d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
-              />
-            </svg>
-          </button>
+        <!-- LISTA DE USUÁRIOS -->
+        <div id="painel-usuarios" class="sidebar-content" style="display: none">
+          <ul id="lista-usuarios-ul" class="lista-contatos"></ul>
+        </div>
+      </aside>
 
-          <div class="chat-info">
-            <h1>Conversa <span id="id-conversa-titulo"></span></h1>
-            <span class="status-user"
-              >Logado: <strong id="nome-usuario-logado"></strong
-            ></span>
+      <!-- ÁREA PRINCIPAL DO CHAT -->
+      <main class="chat-area" id="tela-chat">
+        <!-- ESTADO VAZIO (QUANDO NENHUM CHAT ESTÁ SELECIONADO NO PORTÁTIL) -->
+        <div class="chat-empty" id="chat-empty">
+          <div class="empty-content">
+            <div class="whatsapp-icon">💬</div>
+            <h2>WhatsApp para Web & Mobile</h2>
+            <p>
+              Selecione uma conversa ao lado para começar a enviar mensagens.
+            </p>
           </div>
         </div>
 
-        <button id="btn-limpar" class="btn-danger-sm">🗑️ Excluir</button>
-      </header>
+        <!-- CONTEÚDO ATIVO DO CHAT -->
+        <div
+          class="chat-active-container"
+          id="chat-active"
+          style="display: none"
+        >
+          <header class="controle">
+            <div class="topo-chat">
+              <button id="btn-voltar" class="btn-icon" aria-label="Voltar">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+                  />
+                </svg>
+              </button>
 
-      <main class="painel" id="painel-mensagens"></main>
+              <div class="chat-info">
+                <h1>Conversa <span id="id-conversa-titulo"></span></h1>
+                <span class="status-user">Online</span>
+              </div>
+            </div>
 
-      <form class="area-envio" id="chat-form">
-        <input
-          type="text"
-          id="campo-mensagem"
-          placeholder="Digite uma mensagem"
-          required
-          autocomplete="off"
-        />
-        <button type="submit" aria-label="Enviar">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
-          </svg>
-        </button>
-      </form>
+            <button id="btn-limpar" class="btn-danger-sm">🗑️ Limpar</button>
+          </header>
+
+          <section class="painel" id="painel-mensagens"></section>
+
+          <form class="area-envio" id="chat-form">
+            <input
+              type="text"
+              id="campo-mensagem"
+              placeholder="Digite uma mensagem..."
+              required
+              autocomplete="off"
+            />
+            <button type="submit" aria-label="Enviar">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+              >
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+              </svg>
+            </button>
+          </form>
+        </div>
+      </main>
     </div>
   </body>
 </html>
