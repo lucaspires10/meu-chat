@@ -248,7 +248,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // Renderizar Mensagem na Janela
   function renderizarMensagem(data) {
     const msgDiv = document.createElement("div");
     const ehMinhaMensagem = data.usuario === usuarioLogado;

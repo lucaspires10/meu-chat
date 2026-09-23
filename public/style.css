@@ -405,7 +405,6 @@ body {
   }
 }
 
-/* Notebooks e Desktops (Telas de 768px ou mais) */
 @media (min-width: 768px) {
   .main-wrapper {
     display: flex;
