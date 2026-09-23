@@ -2,101 +2,170 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
 }
 
+html,
 body {
-  background-color: #656a6e;
-  color: #747678;
-  font-family:
-    Segoe UI,
-    Helvetica Neue,
-    Helvetica,
-    Lucida Grande,
-    Arial,
-    Ubuntu,
-    Cantarell,
-    Fira Sans,
-    sans-serif;
-  height: 100vh;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: 100%;
+  height: 100dvh; /* Garante ajuste perfeito no mobile (Safari/Chrome) */
+  background-color: #111b21;
+  color: #e9edef;
   overflow: hidden;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* =========================================
+         TELAS DE AUTENTICAÇÃO E LISTAS
+         ========================================= */
 .auth-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+  background-color: #111b21;
+}
+
+.auth-card {
   width: 100%;
   max-width: 420px;
   background-color: #202c33;
-  padding: 40px 30px;
-  border-radius: 12px;
-  box-shadow: 4px 12px 6px rgba(0, 0, 0, 0.6);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  text-align: center;
-}
-.auth-container form {
+  padding: 28px 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   gap: 16px;
+  text-align: center;
 }
-.auth-container input {
-  background-color: #263843;
-  border: 3px solid transparent;
+
+.auth-card h2 {
+  color: #e9edef;
+  font-size: 1.4rem;
+}
+
+.subtitle {
+  color: #8696a0;
+  font-size: 0.88rem;
+}
+
+.auth-card form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.input-group input,
+#campo-mensagem {
+  width: 100%;
+  background-color: #2a3942;
+  border: 1px solid transparent;
   outline: none;
   color: #e9edef;
   padding: 14px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-size: 1rem;
 }
 
-.auth-container button {
-  background-color: #00ae88;
+.input-group input:focus,
+#campo-mensagem:focus {
+  border-color: #00a884;
+}
+
+.btn-primary {
+  background-color: #00a884;
   color: #111b21;
   font-weight: bold;
   font-size: 1rem;
   border: none;
   padding: 14px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
+  width: 100%;
+  min-height: 48px;
 }
-.auth-toggle {
-  font-size: 0.9rem;
-  color: #8696a0;
-  margin-top: 10px;
+
+.btn-danger {
+  background-color: #ea4335;
+  color: #ffffff;
+  font-weight: bold;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  min-height: 48px;
 }
 
 .btn-link {
-  background: none !important;
-  border: none !important;
-  color: #53bdeb !important;
-  font-size: 0.9rem !important;
-  padding: 0 !important;
-  width: auto !important;
-  height: auto !important;
-  cursor: pointer;
+  color: #53bdeb;
   text-decoration: underline;
-  display: inline;
+  cursor: pointer;
 }
 
-.btn-link:hover {
-  color: #379cdb !important;
-}
-
-#auth-toggle a {
-  color: #3fbbf1;
-  text-decoration: none;
-  font-weight: 500;
+.auth-toggle {
+  font-size: 0.88rem;
+  color: #8696a0;
 }
 
 .erro-msg {
   font-size: 0.85rem;
+  color: #f28b82;
   min-height: 20px;
 }
+
+/* Listas */
+.lista-contatos {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 260px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+
+.item-usuario {
+  background-color: #2a3942;
+  color: #e9edef;
+  padding: 14px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.item-usuario:active,
+.item-usuario:hover {
+  background-color: #00a884;
+  color: #111b21;
+}
+
+.item-usuario span {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+/* =========================================
+         TELA DO CHAT (RESPONSIVA)
+         ========================================= */
 .chat-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  max-width: 900px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   background-color: #0b141a;
@@ -104,116 +173,103 @@ body {
 
 .controle {
   background-color: #202c33;
-  padding: 12px 24px;
+  padding: 10px 14px;
   border-bottom: 1px solid #2a3942;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 65px;
+  min-height: 60px;
 }
 
 .topo-chat {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
+  overflow: hidden;
 }
 
-.controle h1 {
-  font-size: 1.1rem;
+.btn-icon {
+  background: none;
+  border: none;
   color: #00a884;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px;
 }
 
-.controle h3 {
-  font-size: 0.85rem;
+.chat-info h1 {
+  font-size: 0.95rem;
+  color: #00a884;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-user {
+  font-size: 0.72rem;
   color: #8696a0;
-  font-weight: normal;
+  display: block;
 }
 
-#btn-limpar {
+.btn-danger-sm {
   background-color: #ea4335;
   color: #ffffff;
   border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  font-weight: bold;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s;
+  white-space: nowrap;
 }
 
-#btn-limpar:hover {
-  background-color: #c5221f;
-}
-
+/* Painel de Mensagens */
 .painel {
   flex: 1;
   background-color: #0b141a;
-  padding: 24px 10%;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   overflow-y: auto;
-}
-
-.painel::-webkit-scrollbar {
-  width: 6px;
-}
-
-.painel::-webkit-scrollbar-track {
-  background: #0b141a;
-}
-
-.painel::-webkit-scrollbar-thumb {
-  background-color: #374248;
-  border-radius: 4px;
-}
-
-.painel::-webkit-scrollbar-thumb:hover {
-  background-color: #53bdeb;
-}
-
-.painel {
-  scrollbar-width: thin;
-  scrollbar-color: #374248 #0b141a;
 }
 
 .mensagem {
   display: flex;
   flex-direction: column;
-  padding: 8px 14px 6px;
-  border-radius: 8px;
-  max-width: 60%;
-  font-size: 0.95rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  position: relative;
+  padding: 8px 12px 6px;
+  border-radius: 10px;
+  max-width: 85%;
+  font-size: 0.92rem;
+  word-break: break-word;
 }
 
 .mensagem p {
   color: #e9edef;
-  line-height: 1.4;
-  word-break: break-word;
+  line-height: 1.35;
 }
 
 .mensagem-enviada {
   align-self: flex-end;
   background-color: #005c4b;
-  border-top-right-radius: 0;
+  border-top-right-radius: 2px;
 }
 
 .mensagem-recebida {
   align-self: flex-start;
   background-color: #202c33;
-  border-top-left-radius: 0;
+  border-top-left-radius: 2px;
 }
 
 .usuario {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #53bdeb;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .hora {
@@ -223,84 +279,46 @@ body {
   margin-top: 4px;
 }
 
+/* Área de Envio */
 .area-envio {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   background-color: #202c33;
-  padding: 12px 10%;
-  height: 62px;
+  padding: 10px 12px;
+  min-height: 60px;
 }
 
-#campo-mensagem {
+.area-envio input {
   flex: 1;
-  background-color: #2a3942;
-  border: none;
-  outline: none;
-  color: #e9edef;
-  padding: 12px 18px;
-  border-radius: 8px;
-  font-size: 0.95rem;
 }
 
 .area-envio button {
   background-color: #00a884;
   border: none;
   color: #111b21;
-  width: 42px;
-  height: 42px;
+  min-width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s;
 }
 
-.area-envio button:hover {
-  background-color: #008f6f;
-}
-
-@media (max-width: 768px) {
-  .painel,
-  .area-envio {
-    padding-left: 16px;
-    padding-right: 16px;
+/* REGRAS DE ADAPTAÇÃO PARA NOTEBOOK / DESKTOP */
+@media (min-width: 769px) {
+  .painel {
+    padding: 24px 30px;
   }
-
   .mensagem {
-    max-width: 85%;
+    max-width: 65%;
   }
-}
-.lista-contatos {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 300px;
-  overflow-y: auto;
-  margin-top: 10px;
-}
-
-.item-usuario {
-  background-color: #263843;
-  color: #e9edef;
-  padding: 12px 16px;
-  border-radius: 8px;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: background-color 0.2s;
-}
-
-.item-usuario:hover {
-  background-color: #00a884;
-  color: #111b21;
-}
-
-.item-usuario span {
-  font-size: 0.8rem;
-  opacity: 0.8;
+  .controle,
+  .area-envio {
+    padding: 12px 20px;
+  }
+  .chat-info h1 {
+    font-size: 1.1rem;
+  }
 }

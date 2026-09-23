@@ -2,112 +2,105 @@
 <html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Whatsapp Chat - Login</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Whatsapp Chat</title>
     <link rel="stylesheet" href="style.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script src="login.js" defer></script>
   </head>
   <body>
     <div class="auth-container" id="tela-login">
-      <h2>Entrar no Chat</h2>
-      <form id="form-login">
-        <input
-          type="text"
-          id="login-usuario"
-          placeholder="Nome de usuário"
-          required
-        />
-        <input type="password" id="login-senha" placeholder="Senha" required />
-        <button type="submit">Entrar</button>
-      </form>
-      <p class="auth-toggle">
-        Não tem conta?
-        <a href="cadastro.html" class="btn-link">Cadastre-se aqui</a>
-      </p>
-      <div id="login-mensagem" class="erro-msg"></div>
+      <div class="auth-card">
+        <h2>Entrar no Chat</h2>
+        <p class="subtitle">Acesse sua conta para conversar</p>
+
+        <form id="form-login">
+          <div class="input-group">
+            <input
+              type="text"
+              id="login-usuario"
+              placeholder="Nome de usuário"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              id="login-senha"
+              placeholder="Senha"
+              required
+            />
+          </div>
+          <button type="submit" class="btn-primary">Entrar</button>
+        </form>
+
+        <p class="auth-toggle">
+          Não tem conta?
+          <a href="cadastro.html" class="btn-link">Cadastre-se aqui</a>
+        </p>
+        <div id="login-mensagem" class="erro-msg"></div>
+      </div>
     </div>
 
+    <!-- TELA DE LISTA DE CONVERSAS -->
     <div class="auth-container" id="tela-conversas" style="display: none">
-      <h2>Suas Conversas</h2>
-      <p style="color: #8696a0">Selecione uma conversa ou inicie uma nova:</p>
+      <div class="auth-card">
+        <h2>Suas Conversas</h2>
+        <p class="subtitle">Selecione uma conversa ou inicie uma nova:</p>
 
-      <ul id="lista-conversas-ul" class="lista-contatos"></ul>
+        <ul id="lista-conversas-ul" class="lista-contatos"></ul>
 
-      <div id="secao-novo-chat" style="margin-top: 15px">
-        <button
-          id="btn-iniciar-conversa"
-          style="
-            width: 100%;
-            background-color: #00a884;
-            color: #111b21;
-            padding: 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            border: none;
-          "
-        >
-          Iniciar conversa com novo usuário
-        </button>
+        <div id="secao-novo-chat" style="margin-top: 10px">
+          <button id="btn-iniciar-conversa" class="btn-primary">
+            + Iniciar conversa
+          </button>
+        </div>
       </div>
     </div>
 
+    <!-- TELA DE SELEÇÃO DE USUÁRIOS -->
     <div class="auth-container" id="tela-usuarios" style="display: none">
-      <h2>Iniciar Nova Conversa</h2>
-      <p style="color: #8696a0">Selecione um usuário cadastrado:</p>
-      <ul id="lista-usuarios-ul" class="lista-contatos"></ul>
-      <button
-        id="btn-cancelar-novo-chat"
-        style="
-          margin-top: 15px;
-          background-color: #f71500;
-          color: white;
-          border: none;
-          padding: 10px;
-          border-radius: 10px;
-          cursor: pointer;
-          width: 100%;
-        "
-      >
-        Cancelar
-      </button>
-    </div>
+      <div class="auth-card">
+        <h2>Nova Conversa</h2>
+        <p class="subtitle">Selecione um usuário cadastrado:</p>
 
-    <div class="chat-container" id="tela-chat" style="display: none">
-      <div class="controle">
-        <div class="topo-chat">
-          <button
-            id="btn-voltar"
-            title="Voltar"
-            style="
-              background: none;
-              border: none;
-              color: #00a884;
-              font-size: 1.2rem;
-              cursor: pointer;
-              margin-right: 10px;
-            "
-          >
-            Voltar
+        <ul id="lista-usuarios-ul" class="lista-contatos"></ul>
+
+        <div style="margin-top: 10px">
+          <button id="btn-cancelar-novo-chat" class="btn-danger">
+            Cancelar
           </button>
-          <h1>
-            ✉️ Conversa ID:
-            <span id="id-conversa-titulo" style="color: #fff"></span>
-          </h1>
-          <button id="btn-limpar" title="Excluir Conversa">
-            🗑️ Excluir Conversa
-          </button>
-        </div>
-        <div style="margin-top: 10px; color: #8696a0">
-          <span
-            >Logado como:
-            <strong id="nome-usuario-logado" style="color: #00a884"></strong
-          ></span>
         </div>
       </div>
+    </div>
 
-      <div class="painel" id="painel-mensagens"></div>
+    <!-- TELA DO CHAT -->
+    <div class="chat-container" id="tela-chat" style="display: none">
+      <header class="controle">
+        <div class="topo-chat">
+          <button id="btn-voltar" class="btn-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path
+                d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"
+              />
+            </svg>
+          </button>
+
+          <div class="chat-info">
+            <h1>Conversa <span id="id-conversa-titulo"></span></h1>
+            <span class="status-user"
+              >Logado: <strong id="nome-usuario-logado"></strong
+            ></span>
+          </div>
+        </div>
+
+        <button id="btn-limpar" class="btn-danger-sm">🗑️ Excluir</button>
+      </header>
+
+      <main class="painel" id="painel-mensagens"></main>
 
       <form class="area-envio" id="chat-form">
         <input
@@ -115,8 +108,13 @@
           id="campo-mensagem"
           placeholder="Digite uma mensagem"
           required
+          autocomplete="off"
         />
-        <button type="submit">Enviar</button>
+        <button type="submit" aria-label="Enviar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
+          </svg>
+        </button>
       </form>
     </div>
   </body>
